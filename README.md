@@ -1,6 +1,10 @@
 # vmimage-2-azure
 converts ova and vmdk VM Images for the use with Azure.
 
+# diagram
+![alt text](/azure-image-converter.png)
+
+
 #  related links
 
 https://docs.openstack.org/de/image-guide/convert-images.html 
