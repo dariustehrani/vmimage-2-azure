@@ -60,7 +60,7 @@ containerName data
 assign "storage blob contributor" role to VM managed identity
 
 mkdir /mnt/img-data
-sudo blobfuse /mnt/img-data --tmp-path=/mnt/resource/blobfusetmp  --config-file=/home/darius/fuse_connection.cfg -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120
+blobfuse /mnt/img-data --tmp-path=/mnt/resource/blobfusetmp  --config-file=/home/darius/fuse_connection.cfg -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120
 
 # run qemu
 cd /mnt/img-data
@@ -68,3 +68,11 @@ qemu-img convert -f vmdk -O vpc haproxy.ova.vmdk linux-haproxy.vhd & progress -m
 
 ## unmount command for blobfuse
 ## fusermount -u /mnt/img-data
+
+
+# from vmdk to raw
+ qemu-img convert -f vmdk -O raw haproxy.ova.vmdk haproxyfixed.raw
+
+#azcopy login
+azcopy login --identity
+azcopy copy /mnt/img-data/linux-haproxy.vhd 'https://4711vmstoragelrs.blob.core.windows.net/data/linux-haproxy2.vhd' --blob-type=PageBlob

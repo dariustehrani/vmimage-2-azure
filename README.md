@@ -15,6 +15,13 @@ converts ova and vmdk VM Images for the use with Azure.
 * https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-upload-generic
 * https://docs.microsoft.com/de-de/azure/virtual-machines/windows/prepare-for-upload-vhd-image 
 
+# VHD rightsizing
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-upload-generic#resizing-vhds
+
 ### Azure VHD utilities.
 ### This project provides a Go package to read Virtual Hard Disk (VHD) file, a CLI interface to upload local VHD to Azure storage and to inspect a local VHD.
 *  https://github.com/microsoft/azure-vhd-utils
+
+
+### iso 2 azure example
+https://github.com/garvincasimir/Azure-ISO-To-VHD
