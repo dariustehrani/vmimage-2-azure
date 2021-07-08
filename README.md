@@ -25,3 +25,9 @@ https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-upload-gene
 
 ### iso 2 azure example
 https://github.com/garvincasimir/Azure-ISO-To-VHD
+
+### mount vhd in linux
+https://stackoverflow.com/questions/36819474/how-can-i-attach-a-vhdx-or-vhd-file-in-linux
+
+### stackoverflow discussion
+https://superuser.com/questions/716649/how-to-change-fixed-size-vdi-with-modifyhd-command-in-windows

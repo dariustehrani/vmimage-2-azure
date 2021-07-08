@@ -19,7 +19,7 @@
         "storage_account": "4711vmstoragelrs",
         "vm_size": "Standard_DS2_v2",
         "communicator": "ssh",
-        "ssh_username": "root",
+        "ssh_username": "osboxes",
         "ssh_password": "osboxes.org",
         "ssh_timeout": "20m"
       }
