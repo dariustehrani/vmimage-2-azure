@@ -1,0 +1,179 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "DnsName": {
+      "type": "string",
+      "defaultValue": "dnsnameupdateme",
+      "minLength": 1
+    }
+  
+  },
+  "variables": {
+    "VNETPrefix": "192.168.0.0/24",
+    "VNETSubnet1Name": "azureimagebuilder",
+    "VNETSubnet1Prefix": "192.168.0.0/24",
+    "Name": "azureimagebuilder",
+    "AdminUserName": "azureimagebuilder",
+    "AdminPassword": "Password123!!#",
+    "ImagePublisher": "MicrosoftWindowsServer",
+    "ImageOffer": "WindowsServer",
+    "WindowsOSVersion": "2016-Datacenter",
+    "OSDiskName": "[concat(variables('Name'), '-OSDISK')]",
+    "VmSize": "Standard_D8s_v3",
+    "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VNET')]",
+    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet1Name'))]",
+    "NicName": "[concat(variables('Name'), '-NIC')]",
+    "-PUBIPName": "[concat(variables('Name'), '-PIP')]",
+    "InstallBootstrapScriptFolder": ".",
+    "InstallBootstrapScriptFileName": "Bootstrap.ps1",
+    "InstallBootstrapURL": "https://raw.githubusercontent.com/dariustehrani/vmimage-2-azure/master/arm/Bootstrap.ps1"
+  },
+  "resources": [
+    {
+      "name": "VNET",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "VNET"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('VNETPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('VNETSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('VNETSubnet1Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('-PUBIPName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "-PUBIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('DnsName')]"
+        }
+      }
+    },
+    {
+      "name": "[variables('NicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'VNET')]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('-PUBIPName'))]"
+      ],
+      "tags": {
+        "displayName": "Nic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('SubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('-PUBIPName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('Name')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-12-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('NicName'))]"
+      ],
+      "tags": {
+        "displayName": ""
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('VmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('Name')]",
+          "adminUsername": "[variables('AdminUsername')]",
+          "adminPassword": "[variables('AdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('ImagePublisher')]",
+            "offer": "[variables('ImageOffer')]",
+            "sku": "[variables('WindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage",
+            "diskSizeGB": 1023
+          },
+          "dataDisks": [
+            {
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "createOption": "Empty"
+            }
+        ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('NicName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "BootstrapVVM",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2017-12-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('Name'))]"
+           ],
+          "tags": {
+            "displayName": "Bootstrap the VM"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('InstallBootstrapURL')]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'))]"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {}
+}
