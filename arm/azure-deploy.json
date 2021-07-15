@@ -13,7 +13,7 @@
     "VNETPrefix": "192.168.0.0/24",
     "VNETSubnet1Name": "azureimagebuilder",
     "VNETSubnet1Prefix": "192.168.0.0/24",
-    "Name": "azureimagebuilder",
+    "Name": "azbuilder",
     "AdminUserName": "azureimagebuilder",
     "AdminPassword": "Password123!!#",
     "ImagePublisher": "MicrosoftWindowsServer",
