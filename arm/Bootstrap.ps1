@@ -15,5 +15,5 @@ ForEach ($PackageName in $Packages)
 {choco install $PackageName -y}
 
 D: 
-wget https://www.starwindsoftware.com/tmplink/starwindconverter.exe
+C:\ProgramData\chocolatey\bin\wget.exe https://www.starwindsoftware.com/tmplink/starwindconverter.exe
 starwindconverter.exe /silent
