@@ -2,9 +2,9 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "DnsName": {
+    "OVAImageUrl": {
       "type": "string",
-      "defaultValue": "dnsnameupdateme",
+      "defaultValue": "",
       "minLength": 1
     }
   
@@ -21,8 +21,9 @@
     "WindowsOSVersion": "2016-Datacenter",
     "OSDiskName": "[concat(variables('Name'), '-OSDISK')]",
     "VmSize": "Standard_D8s_v3",
-    "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VNET')]",
+    "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('VnetName'))]",
     "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet1Name'))]",
+    "VnetName": "[concat(variables('Name'), '-VNET')]",
     "NicName": "[concat(variables('Name'), '-NIC')]",
     "-PUBIPName": "[concat(variables('Name'), '-PIP')]",
     "InstallBootstrapScriptFolder": ".",
@@ -31,7 +32,7 @@
   },
   "resources": [
     {
-      "name": "VNET",
+      "name": "[variables('VnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
@@ -65,10 +66,7 @@
         "displayName": "-PUBIP"
       },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('DnsName')]"
-        }
+        "publicIPAllocationMethod": "Static"
       }
     },
     {
@@ -77,7 +75,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', 'VNET')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('VnetName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('-PUBIPName'))]"
       ],
       "tags": {
@@ -104,7 +102,7 @@
       "name": "[variables('Name')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2021-03-01",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', variables('NicName'))]"
       ],
@@ -145,11 +143,12 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('NicName'))]"
             }
           ]
-        }
+        },
+        "userData": "[base64(parameters('OVAImageUrl'))]"
       },
       "resources": [
         {
-          "name": "BootstrapVVM",
+          "name": "BootstrapVM",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-12-01",
