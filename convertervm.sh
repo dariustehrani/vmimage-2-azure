@@ -76,3 +76,9 @@ qemu-img convert -f vmdk -O vpc haproxy.ova.vmdk linux-haproxy.vhd & progress -m
 #azcopy login
 azcopy login --identity
 azcopy copy /mnt/img-data/linux-haproxy.vhd 'https://4711vmstoragelrs.blob.core.windows.net/data/linux-haproxy2.vhd' --blob-type=PageBlob
+
+
+#windows10 mount nfs
+Enable-WindowsOptionalFeature -FeatureName ServicesForNFS-ClientOnly, ClientForNFS-Infrastructure -Online -NoRestart
+
+mount -o 4711vmimagenfs.blob.core.windows.net:/4711vmimagenfs/data X:
