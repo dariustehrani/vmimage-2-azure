@@ -18,7 +18,7 @@ ForEach ($PackageName in $Packages)
 #Install StarwindConverter
 D: 
 C:\ProgramData\chocolatey\bin\wget.exe https://www.starwindsoftware.com/tmplink/starwindconverter.exe
-starwindconverter.exe /silent
+D:\starwindconverter.exe /silent
 
 #Initialise Data Discs
 $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
