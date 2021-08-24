@@ -19,7 +19,7 @@ ForEach ($PackageName in $Packages)
 D: 
 C:\ProgramData\chocolatey\bin\wget.exe https://www.starwindsoftware.com/tmplink/starwindconverter.exe
 D:\starwindconverter.exe /silent
-"C:\Program Files\StarWind Software\StarWind V2V Converter\vc\vc_redist.x64.140.exe" /quiet
+"C:\Program Files\StarWind Software\StarWind V2V Converter\vc\vc_redist.x64.140.exe /quiet"
 
 #Initialise Data Discs
 $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
@@ -43,3 +43,7 @@ Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Proxy $Null -Uri "h
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
+
+#Convert Image
+"C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe" convert in_file_name=F:\IMAGE.vmdk out_file_name=F:\IMAGE.vhd out_file_type=ft_vhd_thick
+
