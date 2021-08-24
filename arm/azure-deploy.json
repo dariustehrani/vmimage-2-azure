@@ -7,7 +7,6 @@
       "defaultValue": "",
       "minLength": 1
     }
-  
   },
   "variables": {
     "VNETPrefix": "192.168.0.0/24",
@@ -15,7 +14,7 @@
     "VNETSubnet1Prefix": "192.168.0.0/24",
     "Name": "azbuilder",
     "AdminUserName": "azureimagebuilder",
-    "AdminPassword": "Password123!!#",
+    "AdminPassword": "[concat('P', uniqueString(resourceGroup().id, '224F5A8B-51DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]",
     "ImagePublisher": "MicrosoftWindowsServer",
     "ImageOffer": "WindowsServer",
     "WindowsOSVersion": "2016-Datacenter",
@@ -174,5 +173,10 @@
       ]
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "nameResult": {
+      "type": "string",
+      "value": "[variables('AdminPassword')]"
+    }
+  }
 }
