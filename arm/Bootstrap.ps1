@@ -19,6 +19,7 @@ ForEach ($PackageName in $Packages)
 D: 
 C:\ProgramData\chocolatey\bin\wget.exe https://www.starwindsoftware.com/tmplink/starwindconverter.exe
 D:\starwindconverter.exe /silent
+"C:\Program Files\StarWind Software\StarWind V2V Converter\vcvc_redist.x64.140.exe" /quiet
 
 #Initialise Data Discs
 $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
