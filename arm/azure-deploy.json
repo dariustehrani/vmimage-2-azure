@@ -153,8 +153,7 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('NicName'))]"
             }
           ]
-        },
-        "userData": "[base64(parameters('OVAImageUrl'))]"
+        }
       },
       "resources": [
         {
