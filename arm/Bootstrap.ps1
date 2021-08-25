@@ -39,7 +39,7 @@ $count++
 
 #Download OVA Image
 F:
-C:\ProgramData\chocolatey\bin\base64 -d | C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i "$args[0]"
+C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i "$args[0]"
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
