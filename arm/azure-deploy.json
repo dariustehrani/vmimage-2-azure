@@ -174,7 +174,7 @@
               "fileUris": [
                 "[variables('InstallBootstrapURL')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'), ' ', parameters('OVAImageUrl'), ' ', parameters('VHDDestinationStorageAccount'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'), ' \"', parameters('OVAImageUrl'), '\" \"', parameters('VHDDestinationStorageAccount'), '\"')]"
             }
           }
         }
