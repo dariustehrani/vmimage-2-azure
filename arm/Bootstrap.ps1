@@ -1,3 +1,7 @@
+#Images
+$imageurl = $args[0]
+$desturl = $args[1]
+
 #Force TLS 1.2
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
@@ -39,7 +43,7 @@ $count++
 
 #Download OVA Image
 F:
-C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i "$args[0]"
+C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i "$imageurl"
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
@@ -47,5 +51,5 @@ C:\ProgramData\chocolatey\bin\7z.exe x *ova*
 #Convert Image
 Get-ChildItem -Path F:\ -Filter *.vmdk | ForEach-Object { 
 Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe' convert in_file_name=F:\$_ out_file_name=F:\$_.vhd out_file_type=ft_vhd_thick" 
-C:\ProgramData\chocolatey\bin\azcopy.exe copy F:\$_.vhd "$args[1]"
+C:\ProgramData\chocolatey\bin\azcopy.exe copy F:\$_.vhd "$desturl"
 }
