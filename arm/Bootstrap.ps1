@@ -45,6 +45,4 @@ Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Proxy $Null -Uri "h
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
 
 #Convert Image
-for %%f in (F:\*.vmdk) do (
-"C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe" convert in_file_name=%%f out_file_name=%%f.vhd out_file_type=ft_vhd_thick
-)
+Get-ChildItem -Path F:\ -Filter *.vmdk | ForEach-Object { Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe' convert in_file_name=$_ out_file_name=$_.vhd out_file_type=ft_vhd_thick" }
