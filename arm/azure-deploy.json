@@ -184,8 +184,7 @@
     }
   ],
   "outputs": {
-    "nameResult": {
-      "name": "Admin Password",
+    "Admin Password": {
       "type": "string",
       "value": "[variables('AdminPassword')]"
     }
