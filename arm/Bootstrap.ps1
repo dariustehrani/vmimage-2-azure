@@ -39,10 +39,13 @@ $count++
 
 #Download OVA Image
 F:
-Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Proxy $Null -Uri "http://169.254.169.254/metadata/instance/compute/userData?api-version=2021-01-01&format=text" | C:\ProgramData\chocolatey\bin\base64 -d | C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i -
+C:\ProgramData\chocolatey\bin\base64 -d | C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i "$args[0]"
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
 
 #Convert Image
-Get-ChildItem -Path F:\ -Filter *.vmdk | ForEach-Object { Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe' convert in_file_name=F:\$_ out_file_name=F:\$_.vhd out_file_type=ft_vhd_thick" }
+Get-ChildItem -Path F:\ -Filter *.vmdk | ForEach-Object { 
+Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe' convert in_file_name=F:\$_ out_file_name=F:\$_.vhd out_file_type=ft_vhd_thick" 
+C:\ProgramData\chocolatey\bin\azcopy.exe copy F:\$_.vhd "$args[1]"
+}

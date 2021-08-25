@@ -6,6 +6,14 @@
       "type": "string",
       "defaultValue": "",
       "minLength": 1
+    },
+    "VHDDestinationStorageAccount": {
+      "type": "string",
+      "defaultValue": "",
+      "minLength": 1,
+      "metadata": {
+        "description": "https://[account].blob.core.windows.net/[container]/[path/to/blob]?[SAS]"
+      }
     }
   },
   "variables": {
@@ -166,7 +174,7 @@
               "fileUris": [
                 "[variables('InstallBootstrapURL')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'), ' ', parameters('OVAImageUrl'), ' ', parameters('VHDDestinationStorageAccount'))]"
             }
           }
         }
