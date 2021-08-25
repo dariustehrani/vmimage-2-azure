@@ -12,7 +12,8 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://cho
 #Assign Packages to Install
 $Packages = '7zip',`
             'wget',
-	        'azcopy10'
+	        'azcopy10',
+            'vcredist2015'
 
 #Install Packages
 ForEach ($PackageName in $Packages)
@@ -22,7 +23,7 @@ ForEach ($PackageName in $Packages)
 D: 
 C:\ProgramData\chocolatey\bin\wget.exe https://www.starwindsoftware.com/tmplink/starwindconverter.exe
 D:\starwindconverter.exe /silent
-Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\vc\vc_redist.x64.140.exe' /quiet /log d:\vc.log"
+#Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\vc\vc_redist.x64.140.exe' /quiet /log d:\vc.log"
 
 #Initialise Data Discs
 $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
