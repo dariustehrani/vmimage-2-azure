@@ -5,14 +5,17 @@
     "OVAImageUrl": {
       "type": "string",
       "defaultValue": "",
-      "minLength": 1
+      "minLength": 1,
+      "metadata": {
+        "description": "The URL to your .ova File. This URL needs to be accessable from the Internet without Authentication"
+      }
     },
     "VHDDestinationStorageAccount": {
       "type": "string",
       "defaultValue": "",
       "minLength": 1,
       "metadata": {
-        "description": "https://[account].blob.core.windows.net/[container]/[path/to/blob]?[SAS]"
+        "description": "https://[account].blob.core.windows.net/[container]/[path/to/blob]?[SAS] (Minimum WRITE Permissions)"
       }
     }
   },
