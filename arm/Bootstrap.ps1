@@ -39,7 +39,7 @@ $count++
 
 #Download OVA Image
 F:
-Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Proxy $Null -Uri "http://169.254.169.254/metadata/instance/compute/userData?api-version=2021-01-01&format=text" | C:\ProgramData\chocolatey\bin\base64 -d | C:\ProgramData\chocolatey\bin\wget.exe -i -
+Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Proxy $Null -Uri "http://169.254.169.254/metadata/instance/compute/userData?api-version=2021-01-01&format=text" | C:\ProgramData\chocolatey\bin\base64 -d | C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i -
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
