@@ -12,8 +12,7 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://cho
 #Assign Packages to Install
 $Packages = '7zip',`
             'wget',
-	        'azcopy10',
-            'base64'
+	        'azcopy10'
 
 #Install Packages
 ForEach ($PackageName in $Packages)
