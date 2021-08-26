@@ -50,5 +50,8 @@ C:\ProgramData\chocolatey\bin\7z.exe x *ova*
 #Convert Image
 Get-ChildItem -Path F:\ -Filter *.vmdk | ForEach-Object { 
 Invoke-Expression "& 'C:\Program Files\StarWind Software\StarWind V2V Converter\V2V_ConverterConsole.exe' convert in_file_name=F:\$_ out_file_name=F:\$_.vhd out_file_type=ft_vhd_thick" 
+$size = [math]::ceiling(((Get-Item F:\$_.vhd).length/1MB))
+New-Item "F:\diskpart.txt" -ItemType File -Value "select vdisk file=`"$_.vhd`" `r`nexpand vdisk maximum=$size" -Force
+C:\Windows\System32\diskpart.exe /s F:\diskpart.txt
 C:\ProgramData\chocolatey\bin\azcopy.exe copy F:\$_.vhd "$desturl"
 }
