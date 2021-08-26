@@ -9,14 +9,6 @@
       "metadata": {
         "description": "The URL to your .ova File. This URL needs to be accessable from the Internet without Authentication"
       }
-    },
-    "VHDDestinationStorageAccount": {
-      "type": "string",
-      "defaultValue": "",
-      "minLength": 1,
-      "metadata": {
-        "description": "https://[account].blob.core.windows.net/[container]/[path/to/blob]?[SAS] (Minimum WRITE Permissions)"
-      }
     }
   },
   "variables": {
@@ -38,9 +30,49 @@
     "-PUBIPName": "[concat(variables('Name'), '-PIP')]",
     "InstallBootstrapScriptFolder": ".",
     "InstallBootstrapScriptFileName": "Bootstrap.ps1",
-    "InstallBootstrapURL": "https://raw.githubusercontent.com/dariustehrani/vmimage-2-azure/master/arm/Bootstrap.ps1"
+    "InstallBootstrapURL": "https://raw.githubusercontent.com/dariustehrani/vmimage-2-azure/master/arm/Bootstrap.ps1",
+    "storageAccountName": "[concat(variables('Name'), uniqueString(subscription().subscriptionId, resourceGroup().name))]",
+    "containerName": "images",
+    "serviceSasFunctionValues": {
+      "canonicalizedResource": "[concat('/blob/', variables('storageAccountName'), '/', variables('containerName'))]",
+      "signedResource": "c",
+      "signedPermission": "w",
+      "signedExpiry": "2050-01-01T00:00:00Z"
+    }
   },
   "resources": [
+   {
+      "apiVersion": "2018-02-01",
+      "name": "[variables('storageAccountName')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "supportsHttpsTrafficOnly": true,
+        "accessTier": "Hot",
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "resources": [
+        {
+          "name": "[concat('default/', variables('containerName'))]",
+          "type": "blobServices/containers",
+          "apiVersion": "2018-03-01-preview",
+          "dependsOn": [
+            "[variables('storageAccountName')]"
+          ]
+        }
+      ]
+    },    
     {
       "name": "[variables('VnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -162,7 +194,8 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-12-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('Name'))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('Name'))]",
+            "[variables('storageAccountName')]"
            ],
           "tags": {
             "displayName": "Bootstrap the VM"
@@ -176,7 +209,7 @@
               "fileUris": [
                 "[variables('InstallBootstrapURL')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'), ' \"', parameters('OVAImageUrl'), '\" \"', parameters('VHDDestinationStorageAccount'), '\"')]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('InstallBootstrapScriptFolder'), '/', variables('InstallBootstrapScriptFileName'), ' \"', parameters('OVAImageUrl'),  '\" \"https://', variables('storageAccountName'), '.blob.core.windows.net/', variables('containerName'), '?', listServiceSas(variables('storageAccountName'), '2018-02-01', variables('serviceSasFunctionValues')).serviceSasToken, '\"')]"
             }
           }
         }
@@ -190,3 +223,5 @@
     }
   }
 }
+
+
