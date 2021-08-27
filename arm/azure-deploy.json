@@ -22,7 +22,7 @@
     "ImageOffer": "WindowsServer",
     "WindowsOSVersion": "2016-Datacenter",
     "OSDiskName": "[concat(variables('Name'), '-OSDISK')]",
-    "VmSize": "Standard_D8s_v3",
+    "VmSize": "Standard_L8s_v2",
     "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('VnetName'))]",
     "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet1Name'))]",
     "VnetName": "[concat(variables('Name'), '-VNET')]",
@@ -170,14 +170,7 @@
           "osDisk": {
             "createOption": "FromImage",
             "diskSizeGB": 1023
-          },
-          "dataDisks": [
-            {
-                "diskSizeGB": 32767,
-                "lun": 0,
-                "createOption": "Empty"
-            }
-        ]
+          }
         },
         "networkProfile": {
           "networkInterfaces": [
