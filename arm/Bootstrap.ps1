@@ -42,7 +42,7 @@ $count++
 
 #Download OVA Image
 F:
-C:\ProgramData\chocolatey\bin\curl.exe -k "$imageurl" -o image.ova
+C:\ProgramData\chocolatey\bin\curl.exe -k -L "$imageurl" -o image.ova
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
