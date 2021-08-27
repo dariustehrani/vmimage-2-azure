@@ -11,7 +11,7 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://cho
 
 #Assign Packages to Install
 $Packages = '7zip',`
-            'wget',
+            'curl',
 	        'azcopy10',
             'vcredist2015'
 
@@ -42,7 +42,7 @@ $count++
 
 #Download OVA Image
 F:
-C:\ProgramData\chocolatey\bin\wget.exe --no-check-certificate -i "$imageurl"
+C:\ProgramData\chocolatey\bin\curl.exe -k "$imageurl" -o image.ova
 
 #Extract OVA Image
 C:\ProgramData\chocolatey\bin\7z.exe x *ova*
