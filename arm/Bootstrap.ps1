@@ -21,7 +21,7 @@ ForEach ($PackageName in $Packages)
 
 #Install StarwindConverter
 D: 
-C:\ProgramData\chocolatey\bin\wget.exe https://www.starwindsoftware.com/tmplink/starwindconverter.exe
+C:\ProgramData\chocolatey\bin\curl.exe -k https://www.starwindsoftware.com/tmplink/starwindconverter.exe -o starwindconverter.exe
 D:\starwindconverter.exe /silent
 
 #Initialise Data Discs
