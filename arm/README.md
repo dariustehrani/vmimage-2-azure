@@ -5,3 +5,5 @@
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+## Usage 
+![](azureimagebuilder.gif)
