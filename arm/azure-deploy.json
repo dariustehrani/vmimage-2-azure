@@ -72,13 +72,38 @@
           ]
         }
       ]
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2021-02-01",
+      "name": "[concat(variables('VnetName'), '-NSG')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "AllowRDPInBound",
+            "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "sourceAddressPrefix": "Internet",
+                "destinationPortRange": "3389",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+            }
+        }
+        ]
+      }
     },    
     {
       "name": "[variables('VnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [],
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', [concat(variables('VnetName'), '-NSG')])]"
+      ],
       "tags": {
         "displayName": "VNET"
       },
@@ -92,8 +117,12 @@
           {
             "name": "[variables('VNETSubnet1Name')]",
             "properties": {
-              "addressPrefix": "[variables('VNETSubnet1Prefix')]"
-            }
+              "addressPrefix": "[variables('VNETSubnet1Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', [concat(variables('VnetName'), '-NSG')])]"
+
+              }
+            }            
           }
         ]
       }
